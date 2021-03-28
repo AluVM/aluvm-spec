@@ -11,17 +11,17 @@ operations, including operations on elliptic curves.
 VM is purely functional, meaning that it treats all computation as the
 evaluation of mathematical functions and does not have any side-effects.
 
-To make VM exceptionless and rubust the following design decisions were
+To make VM exceptionless and robust the following design decisions were
 implemented:
 - absence of stack
 - absence of random memory access
-- all registers has a special "uninitialized/no value" state
+- all registers have a special "uninitialized/no value" state
 - all registers at the start of the program are always initialized into
-  "no value" state, after which some of registers are filled with input values
+  "no value" state, after which some of the registers are filled with input values
 - impossible arithmetic operations (like division on zero) instead of generating
   exception bring destination register into "no value" state
-- all instructions accessing register data must check for "no value" state in
-  the source registers and if any of them has it put destination register into
+- all instructions accessing the register data must check for "no value" state in
+  the source registers and if any of them has it, put the destination register into
   "no value" state
 - there are no byte sequences which can't be interpreted as a valid VM
   instruction, so arbitrary code jumps can't lead to an exception
@@ -53,4 +53,4 @@ prefix denoting the operation type, suffix denoting operation dimension
 ```
 
 This will have a bytcode representation by `0x000201` instruction triplete,
-where first byte represents class of the insturctions (core arithmetics).
+where first byte represents a class of the insturctions (core arithmetics).
