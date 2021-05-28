@@ -1,8 +1,9 @@
 # AluVM Specifications
 
-Specification of AluVM (virtual machine for Internet2 projects) and its assembly.
+Specification of AluVM (virtual machine for Internet2 projects) and its 
+assembly language.
 
-AluVM is a pure functional register-based highly deterministic & exception=less
+AluVM is a pure functional register-based highly deterministic & exception-less
 virtual machine without random memory access, capable of performing arithmetic
 operations, including operations on elliptic curves.
 
@@ -34,7 +35,8 @@ implemented:
 ### Registers
 
 AluVM operates five sets of registers:
-- Arithmetic integer registers, or `A`-registers (prefixed with `a` in mnemonics);
+- Arithmetic integer registers, or `A`-registers (prefixed with `a` 
+  in mnemonics);
 - Arithmetic float registers, or `F`-registers (prefixed with `f` in mnemonics);
 - General R-registers, used in cryptography (prefixed with `r` in mnemonics);
 - Bytestring registers, or `S`-registers (prefixed with `s` in mnemonics);
@@ -56,11 +58,11 @@ square brackets in mnemonics.
 - 1024-bit (`a1024`)
 
 **Arithmetic float register types:**
-- 16-bit bfloat16 format used in machine learning (`fb`)
-- 32-bit (19-bit *de facto*) TensorFloat-32 format, also used in machine learning (`f19`)
+- 16-bit bfloat16 format used in machine learning (`f16b`)
 - 16-bit IEEE-754 binary16 half-precision (`f16`)
 - 32-bit IEEE-754 binary32 single-precision (`f32`)
 - 64-bit IEEE-754 binary64 double-precision (`f64`)
+- 80-bit IEEE-754 extended precision (`f80`)
 - 128-bit IEEE-754 binary128 quadruple precision (`f128`)
 - 256-bit IEEE-754 binary256 octuple precision (`f256`)
 - 512-bit tapered floating point (`f512`), described below
@@ -99,8 +101,8 @@ Arithmetic operations has the following degrees of freedom:
      highest bit of the last byte) reserved for the sign: `0` value indicates
      positive sign, `1` indicates negative sign: `(-1)^sign_bit`.
    - IEEE-754 floating point matching the bit length of the registry, with
-     special extensions tapered floating point encoding in 512, 1024 and 
-     2048-bit floating registers.
+     special extension for tapered floating point encoding in 512-bit floating 
+     registers and machine-learning popular format of `bfloat16`.
 2. **Exceptions**
    - Impossible arithmetic operation (0/0, Inf/inf) always sets the destination 
      register into `None` state (corresponding to `NaN` value of IEEE-754, i.e.
