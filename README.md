@@ -1,16 +1,22 @@
 # AluVM Specifications
 
-Specification of AluVM (virtual machine for Internet2 projects) and its 
-assembly language.
+Specification of AluVM (virtual machine for Internet2 projects) instruction set 
+architecture and its assembly language.
 
 AluVM is a pure functional register-based highly deterministic & exception-less
-virtual machine without random memory access, capable of performing arithmetic
-operations, including operations on elliptic curves.
+instruction set architecture (ISA) and virtual machine (VM) without random
+memory access, capable of performing arithmetic operations, including operations 
+on elliptic curves. The AluVM ISA can be extended by the environment
+running the virtual machine (*host environment*), providing ability to load
+data to the VM registers and support application-specific instructions (like
+SIMD).
 
 The main purpose for ALuVM is to be used in distributed systems whether 
 robustness, platform-independent determinism are more important than the speed
 of computation. Such system include blockchain environments, consensus-critical
-computations, client-side-validation etc.
+computations, client-side-validation etc. AluVM ISA extensibility potentially 
+makes AluVM applicable to such areas as running deterministic machine learning 
+and genetic algorithms.
 
 ## Design
 
@@ -19,18 +25,30 @@ evaluation of mathematical functions and does not have any side effects.
 
 To make VM exception-less and robust the following design decisions were
 implemented:
-- absence of stack (however it may be emulated using registers)
-- absence of random memory access
-- all registers have a special "uninitialized/no value" state
-- all registers at the start of the program are always initialized into
-  "no value" state, after which some registers are filled with input values
+- no side effects of any instruction outside of the well defined VM state, and
+  thus:
+  * absence of stack (however it may be emulated using registers);
+  * absence of random memory access;
+- two distinct byte encodings of the full VM state always represent two distinct
+  states (this requires special handling of `NaN` and `±0` values for float 
+  registers);
+- VM state is represented by a finite set of register values with predefined
+  bit dimensionality;
+- all registers have a special "uninitialized/no value" state;
+- all registers at the start of the program are always initialized into;
+  "no value" state, after which some registers are filled with input values;
 - impossible arithmetic operations (like division on zero) instead of generating
-  exception bring destination register into "no value" state
+  exception bring destination register into "no value" state;
 - all instructions accessing the register data must check for "no value" state 
   in the source registers and if any of them has it, put the destination 
-  register into "no value" (`None`) state
+  register into "no value" (`None`) state;
+- each instruction modifies only those non-control flow registers which are
+  explicitly provided as the instruction arguments;
+- the set of the control-flow register modification which may happen during
+  operation are part of this formal specification;
 - there are no byte sequences which can't be interpreted as a valid VM
-  instruction, so arbitrary code jumps can't lead to an exception
+  instruction, so arbitrary code jumps can't lead to an exception;
+- any two distinct byte strings always represent strictly distinct programs.
 
 ### Registers
 
