@@ -83,7 +83,6 @@ instructions) and 2^16-byte long value.
 
 **Control flow registers:**
 - 1-bit status register `st0`
-- 1-bit overflow flag register `of0`
 - 16-bit jump counting register `cy0`
 - 16-bit call stack pointer register `cp0`
 - Block of 2^16 call stack registers `cs0[0..2^16]`
@@ -112,9 +111,10 @@ Arithmetic operations has the following degrees of freedom:
      encodings (`x/0 if x != 0`) results in:
      * for float underflows, subnormally encoded number,
      * for `x/0 if x != 0` on float numbers, `±Inf` float value,
-     * for overflows in integer `checked` operations and floats, `None` value,
+     * for overflows in integer `checked` operations and floats (NB: float 
+       operations are always `checked`), `None` value, setting `st0` to `false`,
      * for overflows in integer `wrapped` operations, modulo division on the
-       maximum register value
+       maximum register value;
 
 As a result, most of the arithmetic operations has to be provided with flags
 specifying which of the encoding and exception handling should be used:
@@ -138,18 +138,31 @@ algorithm: euclidean or non-euclidean rounding.
 
 These operations are performed by *flagged arithmetic instructions*.
 
-Some of the used number encodings allows additional arithmetic operations:
+Each of the flagged arithmetic operations must set the value of `st0` register
+to `false` under the following conditions:
+
+- if overflow has happened for `checked` integer arithmetics;
+- if a float operation resulted in overflow, setting destination register to
+  `±Inf` (but not if the `±Inf` value resulted from a non-overflowing operation,
+  like `0 + Inf = Inf`);
+- if a float operation resulted in `NaN` value, i.e. for impossible arithmetic
+  operations (see above);
+
+In all other cases, including overflows with wrapped flag set, the flagged
+operations must set `st0` to `true`.
+
+Some number encodings allows additional arithmetic operations:
 - Modulo division (division reminder) for unsigned integers
 - Negation for floats and signed integers
-- Absolute value for singed integers and floats
-- Detection of the sign for signed integers and floats
+- Absolute value / sign detection for singed integers and floats
 
 These operations never overflow/underflow and modulo division on zero will 
 always result in `None` value in a destination. Instructions performing these
-operations are named *unflagged arithmetic instructions*.
+operations are named *unflagged arithmetic instructions* and they do not modify
+the value of `st0` register.
 
-**In all the rest, the implementation of the float arithmetics must strictly 
-follow IEEE-754 standard.**
+**Except all aforementioned rules, the implementation of the float arithmetics 
+must strictly follow IEEE-754 standard.**
 
 
 ## Instruction set
