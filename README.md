@@ -1,7 +1,7 @@
 # AluVM Specifications
 
-Specification of AluVM (virtual machine for Internet2 projects) instruction set 
-architecture and its assembly language.
+Specification of AluVM (pronounced as "alluvium", [ɑlˈluːvium]) instruction set 
+architecture and assembly language (AluVM Assembly or AluAsm).
 
 AluVM is a pure functional register-based highly deterministic & exception-less
 instruction set architecture (ISA) and virtual machine (VM) without random
@@ -13,10 +13,32 @@ SIMD).
 
 The main purpose for ALuVM is to be used in distributed systems whether 
 robustness, platform-independent determinism are more important than the speed
-of computation. Such system include blockchain environments, consensus-critical
-computations, client-side-validation etc. AluVM ISA extensibility potentially 
-makes AluVM applicable to such areas as running deterministic machine learning 
-and genetic algorithms.
+of computation. The main area of AluVM applications (using appropriate ISA
+extensions) is blockchain environments, consensus-critical computations,
+multiparty computing (including deterministic machine learning),
+client-side-validation, sandboxed Internet2 computing and genetic algorithms.
+
+
+## Runtime environments and ISA extensions
+
+The current list of AluVM runtime environments (providing corresponding ISA
+extensions) include:
+- AluRE (ALU Runtime Environment, multiparty computations, machine learning and 
+  sandboxed computing for Internet2/Web4 applications running on client-side). 
+  Supports following ISA Extensions:
+  * ALURE (User I/O),
+  * WEB4 (Networking I/O),
+  * SIMD.
+- RGB Core (client-side-validated smart contracts);
+  * RGB: access to RGB contract data,
+  * BTC: access to bitcoin blockchain data,
+- LNP Core (lightning network).
+  * BTC: access to bitcoin blockchain data,
+  * LNC: access to lightning network channel data
+  * WEB4 (Internet2 & Web4 I/O),
+  * SIMD.
+- REBICA (runtime environment for biologically-inspired computing architectures)
+  providing ISA extension with the same name.
 
 ## Design
 
@@ -62,7 +84,7 @@ AluVM operates five sets of registers:
 
 There are 8 types of integer and float arithmetic and general registers, which 
 differ in their bit size. For each type of these, as for the bytestring 
-registers, there are 32 individual registers, indexed with 0..32 numbers put in
+registers, there are 32 individual registers, indexed with 1..=32 numbers put in
 square brackets in mnemonics.
 
 **Arithmetic integer register types:**
