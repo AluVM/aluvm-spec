@@ -212,7 +212,7 @@ must strictly follow IEEE-754 standard.**
 Flagged arithmetic instructions operate two source registers and one destination
 register and are represented by a 40-bit value with the following structure:
 
-Bits   | Bit coint | Meaning     | Possible values
+Bits   | Bit count | Meaning     | Possible values
 ------:| ---------:| ----------- | -------------------
    0-7 |         8 | Operation   | add, sub, mul, div
   8-15 |         8 | Flags       | unsigned_checked, unsigned_wrapped, signed_checked, signed_wrapped, float_near, float_ceil, float_floor, float_to0
